@@ -60,12 +60,4 @@ describe PrettySearch::Field do
       end
     end
   end
-
-  describe '.to_hash' do
-    let(:field) { PrettySearch::Field.new(Company, title) }
-
-    it 'should return hash with model_class and field_name' do
-      expect(field.to_hash).to eq({:company => [:title]})
-    end
-  end
 end

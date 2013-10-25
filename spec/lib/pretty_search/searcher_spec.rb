@@ -18,11 +18,5 @@ describe PrettySearch::Searcher do
         expect(searcher.field_list).to eq [:volume]
       end
     end
-
-    describe '.to_hash' do
-      it 'should return hash with model_class and field_list' do
-        expect(searcher.to_hash).to eq({:mug => [:volume]})
-      end
-    end
   end
 end

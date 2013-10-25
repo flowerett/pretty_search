@@ -57,13 +57,6 @@ module PrettySearch
       end
     end
 
-    # Public: Генерирует хэш с возвращаемыми полями.
-    #
-    # Returns hash.
-    def to_hash
-      {model_class.to_s.downcase.to_sym => field_list}
-    end
-
     protected
 
     # Internal: Вычленяет класс из переданной строки - имени класса,

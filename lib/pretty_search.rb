@@ -50,7 +50,7 @@ module PrettySearch
   # по дефолту - список поисковых методов-предикатов, расчитаных на один аргумент:
   # Arel::Predications.public_instance_methods(false).select{ |meth| !meth.match(/(_all\z)|(_any\z)/) }
   mattr_accessor :accessible_search_methods
-  self.accessible_search_methods = [:not_eq, :eq, :in, :not_in, :matches, :does_not_match, :gteq, :gt, :lt, :lteq]
+  self.accessible_search_methods = [:not_eq, :eq, :matches, :does_not_match, :gteq, :gt, :lt, :lteq]
 
   # Public: Задает/считывает список разрешенных к поиску и селекту полей таблиц.
   # Ниже по приоритету чем 'disabled_fields', т.е. если в 'disabled_fields' указаны какие-то поля,
@@ -118,22 +118,11 @@ module PrettySearch
   # hash - Хэш вида {:model_name => [:field_name, :field_name ...]}.
   #
   # Returns bool.
-  def self.available_for_use?(hash)
-    model_name = hash.keys.first
-    fields = hash.values.first
-
-    if self.disabled_fields.any?
-      if self.disabled_fields.keys.include? model_name
-        self.disabled_fields[model_name].equal?(:all) ? false : (fields & self.disabled_fields[model_name]).none?
-      else
-        true
-      end
-    elsif self.enabled_fields.any?
-      if self.enabled_fields.keys.include? model_name
-        self.enabled_fields[model_name].equal?(:all) ? true : (fields - self.enabled_fields[model_name]).none?
-      else
-        false
-      end
+  def self.available_for_use?(model_name, fields)
+    if disabled_fields.has_key? model_name
+      disabled_fields[model_name].equal?(:all) ? false : (fields & disabled_fields[model_name]).none?
+    elsif enabled_fields.has_key? model_name
+      enabled_fields[model_name].equal?(:all) ? true : (fields - enabled_fields[model_name]).none?
     else
       true
     end
